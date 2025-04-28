@@ -1,36 +1,33 @@
-# Copyright 2024 ByteDance and/or its affiliates.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#      http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+#!/bin/bash
+#SBATCH --job-name=KGv2
+#SBATCH --output=logs/KGv2.out
+#SBATCH --error=logs/KGv2.err
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:1                # 1 GPU
+#SBATCH --cpus-per-task=8           # Adjust based on your needs
+#SBATCH --mem=80G                   # Adjust based on your needs
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
 
-#export LAYERNORM_TYPE=fast_layernorm
-#export USE_DEEPSPEED_EVO_ATTENTION=true
-# wget -P /af3-dev/release_model/ https://af3-dev.tos-cn-beijing.volces.com/release_model/model_v0.2.0.pt
-checkpoint_path="/home/lhw/work/rna2025/release_data/checkpoint//model_v0.2.0.pt"
+# Activate your environment
+source activate kaggle_rna
 
-CUDA_VISIBLE_DEVICES=0 python3 ./runner/train.py \
---run_name output_comp_no_msa \
+checkpoint_path="$HOME/DATA/zeus/hnguyent/DATA/stanford-rna-3d-folding/data/af3-dev/release_model/model_v0.2.0.pt"
+
+CUDA_VISIBLE_DEVICES=0 python ./runner/train.py \
+--run_name kaggle_v2 \
 --seed 42 \
---base_dir ./output_comp_no_msa \
+--base_dir ./PDB_multi \
 --dtype bf16 \
 --use_msa false \
 --project protenix \
---use_wandb true \
+--use_wandb false \
 --diffusion_batch_size 8 \
 --eval_interval 50000 \
 --log_interval 1 \
 --checkpoint_interval 2000 \
 --ema_decay 0.995 \
---train_crop_size 416 \
+--train_crop_size 512 \
 --max_steps 4000 \
 --warmup_steps 50 \
 --lr 0.0001 \

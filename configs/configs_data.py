@@ -60,7 +60,8 @@ default_weighted_pdb_configs = {
     "shuffle_sym_ids": GlobalConfigValue("train_shuffle_sym_ids"),
 }
 
-DATA_ROOT_DIR = "/home/lhw/work/rna2025/release_data/"
+HOME = os.environ.get("HOME")
+DATA_ROOT_DIR = f"{HOME}/DATA/zeus/hnguyent/DATA/stanford-rna-3d-folding/data/af3-dev/"
 
 # Use CCD cache created by scripts/gen_ccd_cache.py priority. (without date in filename)
 # See: docs/prepare_data.md

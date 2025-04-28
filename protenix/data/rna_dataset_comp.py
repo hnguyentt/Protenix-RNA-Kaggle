@@ -93,7 +93,10 @@ class SimpleRNADataset(Dataset):
         use_msa: bool = True,
         crop_size=420
     ) -> None:
-        data_dir = '/home/lhw/work/rna2025/data/'
+        import os
+        HOME = os.environ.get("HOME")
+        data_dir = f'{HOME}/DATA/zeus/hnguyent/DATA/stanford-rna-3d-folding/data/PDB/'
+        # data_dir = f'{HOME}/DATA/zeus/hnguyent/DATA/stanford-rna-3d-folding/data/labels/kaggle_v2/'
         label_fn = data_dir + 'train_labels.csv'
         label_dict = self.parse_labels(label_fn)
 #         print(len(label_dict['1ZDI_S']['seq']))
@@ -109,13 +112,14 @@ class SimpleRNADataset(Dataset):
         
         seq_fn = data_dir + 'train_sequences.csv'
         df = pd.read_csv(seq_fn)
+        print("Num of sequences: ", len(df))
         self.inputs = []
         for _, row in df.iterrows():
             target_id = row['target_id']
             sequence = row['sequence']
             assert sequence==label_dict[target_id]['seq']
-            if len(sequence) > crop_size:
-                continue
+            # if len(sequence) > crop_size: # Hoa: don't need to exclude here, crop later in process_one
+            #     continue
             if '-' in sequence:
                 print('skip: - sequence ')
                 continue
@@ -125,7 +129,7 @@ class SimpleRNADataset(Dataset):
                     "sequence": sequence,
                     "count": 1,
                      "msa": {
-                           "precomputed_msa_dir": "/home/lhw/work/rna2025/data/MSA/",
+                           "precomputed_msa_dir": f'{HOME}/DATA/zeus/hnguyent/DATA/stanford-rna-3d-folding/data/MSA/',
                            "pairing_db": ""
                           },
                   },
@@ -154,7 +158,7 @@ class SimpleRNADataset(Dataset):
         # R1107_4, G, 4, -5.783999919891357, 19.98500061035156, 18.666000366210938, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18
         # R1107_5, G, 5, -5.755000114440918, 25.53300094604492, 17.132999420166016, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18
         # R1107_6, C, 6, -6.227000236511231, 30.093000411987305, 13.96500015258789, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18, -1e+18
-        pass
+        # pass
         df = pd.read_csv(csv_file)
         df.fillna(-1e8, inplace=True)
 
@@ -249,7 +253,8 @@ class SimpleRNADataset(Dataset):
             xyz = xyz[:, start:end, :]
             single_sample_dict["sequences"][0]['rnaSequence']['sequence'] = seq
         # now only take the top1
-        only_top1 = True
+        only_top1 = False
+        # only_top1 = True
         if only_top1:
             xyz = xyz[0]
 
